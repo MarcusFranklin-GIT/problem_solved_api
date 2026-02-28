@@ -1,19 +1,21 @@
 package com.marcus.leetcodestats.controller;
 
-import com.marcus.leetcodestats.dto.LeetCodeResponse;
-import com.marcus.leetcodestats.service.LeetCodeService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+import com.marcus.leetcodestats.dto.LeetCodeResponse;
+import com.marcus.leetcodestats.service.LeetCodeService;
+
 @RestController
 @RequestMapping("/leetcode")
 public class LeetCodeController {
+
+    private static final Logger log = LoggerFactory.getLogger(LeetCodeController.class);
 
     private final LeetCodeService leetCodeService;
 

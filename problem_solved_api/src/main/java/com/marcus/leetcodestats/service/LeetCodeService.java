@@ -1,18 +1,21 @@
 package com.marcus.leetcodestats.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.marcus.leetcodestats.client.LeetCodeClient;
 import com.marcus.leetcodestats.dto.GraphQLResponse;
 import com.marcus.leetcodestats.dto.LeetCodeResponse;
 import com.marcus.leetcodestats.exception.LeetCodeApiException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@Slf4j
 @Service
 public class LeetCodeService {
+
+    private static final Logger log = LoggerFactory.getLogger(LeetCodeService.class);
 
     private final LeetCodeClient leetCodeClient;
 
@@ -97,7 +100,8 @@ public class LeetCodeService {
 
         for (GraphQLResponse.AcSubmission submission : matchedUser.getSubmitStats().getAcSubmissionNum()) {
             String difficulty = submission.getDifficulty();
-            Integer count = submission.getCount() != null ? submission.getCount() : 0;
+            Integer rawCount = submission.getCount();
+            int count = (rawCount != null) ? rawCount : 0;
 
             if (difficulty != null) {
                 counts.put(difficulty, count);

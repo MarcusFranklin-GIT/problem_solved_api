@@ -1,20 +1,23 @@
 package com.marcus.leetcodestats.client;
 
-import com.marcus.leetcodestats.dto.GraphQLRequest;
-import com.marcus.leetcodestats.dto.GraphQLResponse;
-import com.marcus.leetcodestats.exception.LeetCodeApiException;
-import com.marcus.leetcodestats.exception.LeetCodeUserNotFoundException;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.marcus.leetcodestats.dto.GraphQLRequest;
+import com.marcus.leetcodestats.dto.GraphQLResponse;
+import com.marcus.leetcodestats.exception.LeetCodeApiException;
+import com.marcus.leetcodestats.exception.LeetCodeUserNotFoundException;
 
-@Slf4j
 @Component
 public class LeetCodeClient {
+
+    private static final Logger log = LoggerFactory.getLogger(LeetCodeClient.class);
 
     private final WebClient webClient;
     private static final String GRAPHQL_ENDPOINT = "/graphql";
@@ -65,11 +68,10 @@ public class LeetCodeClient {
         } catch (WebClientResponseException e) {
             log.error("WebClient error while fetching user {}: {}", username, e.getMessage());
             throw new LeetCodeApiException("Failed to connect to LeetCode: " + e.getMessage(), e);
-        } catch (Exception e) {
+        } catch (LeetCodeUserNotFoundException | LeetCodeApiException e) {
+            throw e;
+        } catch (RuntimeException e) {
             log.error("Unexpected error while fetching user {}: {}", username, e.getMessage());
-            if (e instanceof LeetCodeUserNotFoundException || e instanceof LeetCodeApiException) {
-                throw e;
-            }
             throw new LeetCodeApiException("Failed to fetch user stats: " + e.getMessage(), e);
         }
     }
